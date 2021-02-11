@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<script>
+  function reducer(state, action) {
+    if (action.type === 'plus') {
+      return {
+        ...state,
+        count: state.count + 1
+      };
+    }
+
+    if (action.type === 'minus') {
+      return {
+        ...state,
+        count: state.count - 1
+      };
+    }
+
+    return state;
+  }
+
+  function ReduxCounter(reducer, initialState) {
+    let state = initialState;
+
+    function dispatch(action) {
+      const newState = reducer(state, action);
+
+      state = newState;
+    }
+
+    function getCount() {
+      return count;
+    }
+
+    return { dispatch, getCount };
+  }
+
+  let ACounter = ReduxCounter(countReducer, 7);
+  ACounter.dispatch({ type: 'plus' });
+  ACounter.dispatch({ type: 'plus' });
+  ACounter.dispatch({ type: 'minus' });
+
+  function loggit() {
+    console.log('count: ', ACounter.getCount())
+  }
+
+  function useRedux(reducer, initialState) {
+    let state = initialState;
+
+    function dispatch(action) {
+      reducer(state, action);
+    }
+
+    function getState() {
+      return state;
+    }
+
+    return { getState, dispatch };
+  }
+
+  const { getState, dispatch } = useRedux(countReducer, { count: 0 });
+
+  function doIncrement() {
+    dispatch({ type: 'plus' });
+  }
+</script>
+
+<body>
+  <button onClick="loggit();">Log count</button>
+</body>
+
+</html>
